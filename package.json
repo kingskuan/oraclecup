@@ -1,0 +1,13 @@
+{
+  "name": "oraclecup",
+  "version": "1.0.0",
+  "private": true,
+  "description": "OracleCup monorepo. The deployable service is the static dApp under frontend/.",
+  "scripts": {
+    "build": "npm --prefix frontend install",
+    "start": "npm --prefix frontend start"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
