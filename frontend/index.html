@@ -765,17 +765,39 @@ document.getElementById("contractLink").href = `${EXPLORER}/address/${CONTRACT_A
 document.getElementById("explorerLink").href = `${EXPLORER}/address/${CONTRACT_ADDRESS}`;
 
 /* ========================================================
-   WALLET
+   WALLET — detects OKX Wallet, MetaMask, and EIP-6963 multi-injected providers
    ======================================================== */
+let injectedEth = null; // resolved at connect() time
+
+function detectInjectedProvider() {
+  // 1. OKX Wallet always injects window.okxwallet, even when MetaMask owns window.ethereum
+  if (typeof window !== "undefined" && window.okxwallet) return window.okxwallet;
+  // 2. EIP-1193 default — works for MetaMask and OKX-as-default
+  if (typeof window !== "undefined" && window.ethereum) {
+    // If multiple providers race for window.ethereum, prefer OKX if present
+    const eth = window.ethereum;
+    if (eth.providers && Array.isArray(eth.providers)) {
+      const okx = eth.providers.find(p => p.isOkxWallet || p.isOKExWallet);
+      if (okx) return okx;
+      const mm = eth.providers.find(p => p.isMetaMask);
+      if (mm) return mm;
+      return eth.providers[0];
+    }
+    return eth;
+  }
+  return null;
+}
+
 async function connect() {
-  if (!window.ethereum) {
-    toast("No wallet detected. Install OKX Wallet or MetaMask.", true);
+  injectedEth = detectInjectedProvider();
+  if (!injectedEth) {
+    toast("No wallet detected. Install OKX Wallet or MetaMask browser extension, then reload.", true);
     return;
   }
   try {
-    await window.ethereum.request({ method: "eth_requestAccounts" });
+    await injectedEth.request({ method: "eth_requestAccounts" });
     await ensureXLayer();
-    provider = new ethers.BrowserProvider(window.ethereum);
+    provider = new ethers.BrowserProvider(injectedEth);
     signer = await provider.getSigner();
     userAddress = await signer.getAddress();
     contract = new ethers.Contract(CONTRACT_ADDRESS, ABI, signer);
@@ -801,13 +823,13 @@ async function connect() {
 
 async function ensureXLayer() {
   try {
-    await window.ethereum.request({
+    await injectedEth.request({
       method: "wallet_switchEthereumChain",
       params: [{ chainId: CHAIN_ID_HEX }]
     });
   } catch (e) {
     if (e.code === 4902) {
-      await window.ethereum.request({
+      await injectedEth.request({
         method: "wallet_addEthereumChain",
         params: [{
           chainId: CHAIN_ID_HEX,
