@@ -6,7 +6,7 @@ OracleCup is an AI-Agent–powered prediction market for the FIFA World Cup, bui
 
 ## Live links
 
-- 🌐 App: _TBD (Railway URL after deploy)_
+- 🌐 App: **https://oraclecup-production.up.railway.app**
 - 📜 Contract: [`0x89234D4A0289be6F62d05154F07900033c89C23D`](https://www.oklink.com/xlayer/address/0x89234D4A0289be6F62d05154F07900033c89C23D) on X Layer mainnet
 - 🐦 Twitter: https://x.com/OracleCup
 - 🎥 Demo video: _TBD (YouTube)_

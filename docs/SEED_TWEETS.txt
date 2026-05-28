@@ -7,7 +7,7 @@ AI Fair Odds:
 → NO  44%
 
 Live on @XLayerOfficial. Settle on-chain.
-Bet → oraclecup.xyz
+Bet → oraclecup-production.up.railway.app
 Contract → 0x0000…0000
 
 #BuildXHackathon #XLayer #OnchainOS
@@ -23,7 +23,7 @@ AI Fair Odds:
 → NO  42%
 
 Live on @XLayerOfficial. Settle on-chain.
-Bet → oraclecup.xyz
+Bet → oraclecup-production.up.railway.app
 Contract → 0x0000…0000
 
 #BuildXHackathon #XLayer #OnchainOS
@@ -39,7 +39,7 @@ AI Fair Odds:
 → NO  48%
 
 Live on @XLayerOfficial. Settle on-chain.
-Bet → oraclecup.xyz
+Bet → oraclecup-production.up.railway.app
 Contract → 0x0000…0000
 
 #BuildXHackathon #XLayer #OnchainOS
@@ -55,7 +55,7 @@ AI Fair Odds:
 → NO  44%
 
 Live on @XLayerOfficial. Settle on-chain.
-Bet → oraclecup.xyz
+Bet → oraclecup-production.up.railway.app
 Contract → 0x0000…0000
 
 #BuildXHackathon #XLayer #OnchainOS
@@ -71,7 +71,7 @@ AI Fair Odds:
 → NO  68%
 
 Live on @XLayerOfficial. Settle on-chain.
-Bet → oraclecup.xyz
+Bet → oraclecup-production.up.railway.app
 Contract → 0x0000…0000
 
 #BuildXHackathon #XLayer #OnchainOS
@@ -87,7 +87,7 @@ AI Fair Odds:
 → NO  82%
 
 Live on @XLayerOfficial. Settle on-chain.
-Bet → oraclecup.xyz
+Bet → oraclecup-production.up.railway.app
 Contract → 0x0000…0000
 
 #BuildXHackathon #XLayer #OnchainOS

@@ -92,7 +92,7 @@ function composeTweet({ marketId, question, yesProb, txHash, fixture }) {
     `→ NO  ${inverse}%`,
     ``,
     `Live on @XLayerOfficial. Settle on-chain.`,
-    `Bet → oraclecup.xyz`,
+    `Bet → oraclecup-production.up.railway.app`,
     `Contract → ${CONTRACT_ADDRESS.slice(0,6)}…${CONTRACT_ADDRESS.slice(-4)}`,
     ``,
     `#BuildXHackathon #XLayer #OnchainOS`
@@ -108,7 +108,7 @@ function composeSettleTweet({ marketId, question, outcome }) {
     `${question}`,
     `Result: ${label}`,
     ``,
-    `Winners can claim now: oraclecup.xyz`,
+    `Winners can claim now: oraclecup-production.up.railway.app`,
     `Settled in <2s on @XLayerOfficial — try doing THAT off-chain.`,
     ``,
     `#BuildXHackathon #XLayer`
