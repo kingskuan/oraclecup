@@ -1,0 +1,15 @@
+{
+  "name": "oraclecup-agent",
+  "version": "1.0.0",
+  "description": "OracleCup AI Oracle — autonomous market creation, pricing, and settlement on X Layer.",
+  "private": true,
+  "main": "ai_agent.js",
+  "scripts": {
+    "dry-run": "node ai_agent.js",
+    "live": "node ai_agent.js --live"
+  },
+  "dependencies": {
+    "ethers": "^6.13.2",
+    "twitter-api-v2": "^1.18.0"
+  }
+}
