@@ -4,7 +4,7 @@
   "private": true,
   "description": "OracleCup dApp — single-file static site served via `serve`.",
   "scripts": {
-    "start": "serve -s . -l tcp://0.0.0.0:${PORT:-3000}"
+    "start": "serve -s . --no-clipboard --no-port-switching --config serve.json -l tcp://0.0.0.0:${PORT:-3000}"
   },
   "dependencies": {
     "serve": "^14.2.4"
