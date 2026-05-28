@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<title>OracleCup — Wallet Diagnostic</title>
+<style>
+  body { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; background: #0A0E1A; color: #F5F7FA; padding: 24px; line-height: 1.6; }
+  h1 { color: #00FFB3; }
+  .pass { color: #00FFB3; }
+  .fail { color: #FF6B00; }
+  .row { display: flex; gap: 12px; padding: 4px 0; border-bottom: 1px solid #1a2030; }
+  .label { width: 320px; color: #888; }
+  .val { font-weight: 600; }
+  pre { background: #11162A; padding: 12px; border-radius: 8px; overflow: auto; }
+  button { background: #00D395; color: #0A0E1A; border: 0; padding: 10px 18px; border-radius: 8px; font-weight: 700; cursor: pointer; margin-right: 8px; }
+  .copy { background: #1a2030; color: #00FFB3; }
+</style>
+</head>
+<body>
+<h1>OracleCup wallet diagnostic</h1>
+<p>Snapshot of what your browser exposes to web3 dApps. Click <b>Run / Refresh</b>, then <b>Copy report</b> and paste back in chat.</p>
+
+<div>
+  <button onclick="run()">↻ Run / Refresh</button>
+  <button class="copy" onclick="copyReport()">📋 Copy report</button>
+  <button onclick="tryConnect()">🔌 Try real Connect</button>
+</div>
+
+<h2>Snapshot</h2>
+<div id="snapshot"></div>
+
+<h2>Raw report (copy this)</h2>
+<pre id="raw">(click Run)</pre>
+
+<script>
+const data = {};
+function row(k, v, ok=null) {
+  const cls = ok === true ? 'pass' : ok === false ? 'fail' : '';
+  return `<div class="row"><div class="label">${k}</div><div class="val ${cls}">${v}</div></div>`;
+}
+function detectInjectedProvider() {
+  if (window.okxwallet) return { src:'window.okxwallet', obj: window.okxwallet };
+  if (window.ethereum) {
+    const eth = window.ethereum;
+    if (Array.isArray(eth.providers)) {
+      const okx = eth.providers.find(p => p.isOkxWallet || p.isOKExWallet);
+      if (okx) return { src:'window.ethereum.providers[okx]', obj: okx };
+      const mm = eth.providers.find(p => p.isMetaMask);
+      if (mm) return { src:'window.ethereum.providers[mm]', obj: mm };
+      return { src:'window.ethereum.providers[0]', obj: eth.providers[0] };
+    }
+    return { src:'window.ethereum', obj: eth };
+  }
+  return null;
+}
+function flagsOf(obj) {
+  if (!obj) return [];
+  return Object.keys(obj).filter(k => k.startsWith('is') && obj[k] === true);
+}
+function run() {
+  data.timestamp = new Date().toISOString();
+  data.url = location.href;
+  data.userAgent = navigator.userAgent;
+  data.cookieEnabled = navigator.cookieEnabled;
+  data.windowKeys_walletish = Object.keys(window).filter(k => /eth|okx|wallet|crypto/i.test(k));
+  data.window_okxwallet = typeof window.okxwallet;
+  data.window_ethereum = typeof window.ethereum;
+  if (window.okxwallet) {
+    data.okxwallet_flags = flagsOf(window.okxwallet);
+    data.okxwallet_keys = Object.keys(window.okxwallet).slice(0, 30);
+  }
+  if (window.ethereum) {
+    data.ethereum_flags = flagsOf(window.ethereum);
+    data.ethereum_hasProvidersArray = Array.isArray(window.ethereum.providers);
+    if (data.ethereum_hasProvidersArray) {
+      data.ethereum_providers = window.ethereum.providers.map(p => ({ flags: flagsOf(p) }));
+    }
+  }
+  const detected = detectInjectedProvider();
+  data.detected_source = detected ? detected.src : null;
+  data.detected_flags = detected ? flagsOf(detected.obj) : [];
+
+  // render
+  const s = document.getElementById('snapshot');
+  s.innerHTML = '';
+  s.insertAdjacentHTML('beforeend', row('window.okxwallet', data.window_okxwallet, data.window_okxwallet !== 'undefined'));
+  s.insertAdjacentHTML('beforeend', row('window.ethereum', data.window_ethereum, data.window_ethereum !== 'undefined'));
+  s.insertAdjacentHTML('beforeend', row('OKX flags on .okxwallet', JSON.stringify(data.okxwallet_flags||[])));
+  s.insertAdjacentHTML('beforeend', row('Flags on .ethereum', JSON.stringify(data.ethereum_flags||[])));
+  s.insertAdjacentHTML('beforeend', row('.ethereum.providers[]', data.ethereum_hasProvidersArray ? JSON.stringify(data.ethereum_providers) : '—'));
+  s.insertAdjacentHTML('beforeend', row('Wallet-ish window keys', JSON.stringify(data.windowKeys_walletish)));
+  s.insertAdjacentHTML('beforeend', row('Detected provider source', data.detected_source || 'NONE', !!data.detected_source));
+  s.insertAdjacentHTML('beforeend', row('Detected provider flags', JSON.stringify(data.detected_flags)));
+  s.insertAdjacentHTML('beforeend', row('User-Agent', data.userAgent));
+  s.insertAdjacentHTML('beforeend', row('cookieEnabled', data.cookieEnabled));
+
+  document.getElementById('raw').textContent = JSON.stringify(data, null, 2);
+}
+function copyReport() {
+  navigator.clipboard.writeText(document.getElementById('raw').textContent)
+    .then(() => alert('Report copied. Paste it back in chat.'))
+    .catch(e => alert('Copy failed — manually select the Raw report block. Error: ' + e.message));
+}
+async function tryConnect() {
+  const d = detectInjectedProvider();
+  if (!d) { alert('No injected provider. Run/Refresh first.'); return; }
+  try {
+    const accounts = await d.obj.request({ method: 'eth_requestAccounts' });
+    alert('✅ Connected: ' + accounts.join(', '));
+  } catch (e) {
+    alert('❌ ' + (e.message || e));
+  }
+}
+run();
+</script>
+</body>
+</html>
