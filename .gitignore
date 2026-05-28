@@ -12,6 +12,7 @@ contracts/typechain-types/
 
 # Agent runtime
 agent/tweets_to_post.txt
+tweets_to_post.txt
 
 # Editor
 .vscode/
